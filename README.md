@@ -109,10 +109,57 @@ In advanced stages, the focus shifts to improving query performance. Some optimi
 
 ### Medium Level
 1. Calculate the average danceability of tracks in each album.
-2. Find the top 5 tracks with the highest energy values.
-3. List all tracks along with their views and likes where `official_video = TRUE`.
-4. For each album, calculate the total views of all associated tracks.
-5. Retrieve the track names that have been streamed on Spotify more than on YouTube.
+   ```sql	
+	SELECT
+	ALBUM,
+	AVG(Danceability) AS Average_Danceability
+	FROM Spotify
+	GROUP BY ALBUM
+	ORDER BY Average_Danceability DESC;
+   ```
+3. Find the top 5 tracks with the highest energy values.
+   ```sql
+   	SELECT
+	TRACK,
+	ENERGY
+	FROM Spotify
+	ORDER BY ENERGY DESC
+	LIMIT 5;
+   ```
+5. List all tracks along with their views and likes where `official_video = TRUE`.
+   ```sql
+	SELECT
+	TRACK,
+	VIEWS,
+	LIKES
+	FROM Spotify
+	WHERE Official_Video = TRUE;
+   ```
+7. For each album, calculate the total views of all associated tracks.
+   ```sql
+   	SELECT
+	ALBUM,
+	TRACK,
+	SUM(VIEWS) AS Total_Views
+	FROM Spotify
+	GROUP BY ALBUM, TRACK
+	ORDER BY ALBUM, Total_Views;
+   ```
+9. Retrieve the track names that have been streamed on Spotify more than on YouTube.
+   ```sql
+	SELECT * FROM
+	(SELECT
+		TRACK,
+		COALESCE(SUM(CASE WHEN Most_Played_On = 'Youtube' THEN STREAM END),0) AS Streamed_On_Youtube,
+		COALESCE(SUM(CASE WHEN Most_Played_On = 'Spotify' THEN STREAM END),0) AS Streamed_On_Spotify
+	FROM Spotify
+	GROUP BY TRACK
+	) AS T
+	WHERE 
+	Streamed_On_Spotify > Streamed_On_Youtube
+	AND
+	Streamed_On_Youtube <> 0;
+   ```
 
 ### Advanced Level
 1. Find the top 3 most-viewed tracks for each artist using window functions.
