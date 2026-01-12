@@ -76,17 +76,43 @@ In advanced stages, the focus shifts to improving query performance. Some optimi
 	FROM Spotify
 	WHERE STREAM > 1000000000;
    ```
-3. List all albums along with their respective artists.
-4. Get the total number of comments for tracks where `licensed = TRUE`.
-5. Find all tracks that belong to the album type `single`.
-6. Count the total number of tracks by each artist.
+2. List all albums along with their respective artists.
+   ```sql
+	SELECT
+	DISTINCT ALBUM,
+	ARTIST
+	FROM Spotify;
+   ```
+3. Get the total number of comments for tracks where `licensed = TRUE`.
+   ```sql
+	SELECT
+	SUM(COMMENTS) AS Total_Comments
+	FROM Spotify
+	WHERE LICENSED = TRUE;
+   ```
+4. Find all tracks that belong to the album type `single`.
+   ```sql
+	SELECT
+	TRACK,
+	Album_Type
+	FROM Spotify
+	WHERE Album_Type = 'single';
+   ```
+5. Count the total number of tracks by each artist.
+   ```sql
+	SELECT
+	ARTIST,
+	COUNT(TRACK) AS Total_Tracks
+	FROM Spotify
+	GROUP BY ARTIST;
+   ```
 
 ### Medium Level
 1. Calculate the average danceability of tracks in each album.
 2. Find the top 5 tracks with the highest energy values.
 3. List all tracks along with their views and likes where `official_video = TRUE`.
 4. For each album, calculate the total views of all associated tracks.
-5. Retrieve the track names that have been streamed on Spotify more than YouTube.
+5. Retrieve the track names that have been streamed on Spotify more than on YouTube.
 
 ### Advanced Level
 1. Find the top 3 most-viewed tracks for each artist using window functions.
